@@ -1,0 +1,14 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+div[data-rk], #root {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
