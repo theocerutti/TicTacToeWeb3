@@ -2,86 +2,100 @@
 pragma solidity ^0.8.9;
 
 contract TicTacToe {
-    Game[] public games;
-    uint256 private gameCounterId = 0;
+    Game[] private games;
+
+    // SquareType
+    uint8 constant SQUARE_NONE = 0;
+    uint8 constant SQUARE_OWNER = 1;
+    uint8 constant SQUARE_OPPONENT = 2;
 
     enum GameState {
         Draw,
-        OwnerWon,
-        OpponentWon,
-        NotFinished
-    }
-
-    enum SquareType {
-        None,
-        Owner,
-        Opponent
+        HasWinner,
+        OnGoing
     }
 
     struct Game {
         address owner;
         address opponent;
-        byte[9] board;
+        address winner;
+        uint8[9] board;
         bool isOwnerTurn;
         GameState gameState;
     }
 
-    function mintGame() public {
-        uint8[9] memory board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    event NewGame(address owner);
+    event JoinGame(uint256 gameId, address opponent);
+
+    function mintGame() external {
+        uint8[9] memory board;
         for (uint8 i = 0; i < board.length; i++) {
-            board[i] = SquareType.None;
+            board[i] = SQUARE_NONE;
         }
-        Game memory game = Game(msg.sender, address(0), board, true, GameState.NotFinished);
+        Game memory game = Game(msg.sender, address(0), address(0), board, true, GameState.OnGoing);
         games.push(game);
+
+        emit NewGame(msg.sender);
     }
 
-    function join(uint256 gameId) public {
+    function join(uint256 gameId) external {
         require(gameId < games.length, "This game does not exist");
         require(games[gameId].owner != msg.sender, "You cannot join your own game");
         require(games[gameId].opponent == address(0), "This game is already full");
-        require(games[gameId].gameState == GameState.NotFinished, "This game is already finished");
+        require(games[gameId].gameState == GameState.OnGoing, "This game is already finished");
 
         Game storage game = games[gameId];
         game.opponent = msg.sender;
+
+        emit JoinGame(gameId, msg.sender);
     }
 
-    function checkWinner(uint8[] board) {
-        int[] aRow = new int[3];
-        int[] aCol = new int[3];
-        int[] bRow = new int[3];
-        int[] bCol = new int[3];
-        int aD1 = 0;
-        int aD2 = 0;
-        int bD1 = 0;
-        int bD2 = 0;
-        for (int i = 0; i < board.length; ++i) {
-            int r = board[i][0];
-            int c = board[i][1];
-            if (i % 2 == 1) {
-                if (++bRow[r] == 3 || ++bCol[c] == 3 || r == c && ++bD1 == 3 || r + c == 2 && ++bD2 == 3)
-                    return GameState.OpponentWon;
-            } else {
-                if (++aRow[r] == 3 || ++aCol[c] == 3 || r == c && ++aD1 == 3 || r + c == 2 && ++aD2 == 3)
-                    return GameState.OwnerWon;
+    function _checkWinner(uint8[9] storage board, uint8 square) internal view returns (GameState) {
+        for (uint8 i = 0; i < 3; i++) {
+            // vertical checks
+            if ((board[i] == square && board[i + 3] == square && board[i + 6] == square) ||
+                // horizontal checks
+                (board[i * 3] == square && board[i * 3 + 1] == square && board[i * 3 + 2] == square)) {
+                return GameState.HasWinner;
             }
         }
-        return board.length == 9 ? GameState.Draw : GameState.NotFinished;
+
+        // major diagonal
+        if ((board[0] == square && board[4] == square && board[8] == square) ||
+            // minor diagonal
+            (board[3] == square && board[4] == square && board[6] == square)) {
+            return GameState.HasWinner;
+        }
+
+        uint8 j = 0;
+        for (uint8 i = 0; i < 9; i++) // TODO: to refactor don't want to do two loops
+            if (board[i] != SQUARE_NONE)
+                j++;
+        return j == 9 ? GameState.Draw : GameState.OnGoing;
     }
 
-    function play(uint256 gameId, uint8 position) public {
+    function play(uint256 gameId, uint8 position) external {
         Game storage game = games[gameId];
-        require(game.opponent == msg.sender, "You are not allowed to play this game");
-        require(game.board[position] != SquareType.None, "This position is already taken");
-        require(game.gameState == GameState.NotFinished, "This game is already finished");
+        require(game.opponent != address(0), "You don't have any opponent");
+        require(game.board[position] == SQUARE_NONE, "This position is already taken");
+        require(game.gameState == GameState.OnGoing, "This game is already finished");
         require(game.isOwnerTurn == (msg.sender == game.owner), "It is not your turn");
 
-        game.board[position] = game.isOwnerTurn ? SquareType.Owner : SquareType.Opponent;
+        uint8 playerSquare = game.isOwnerTurn ? SQUARE_OWNER : SQUARE_OPPONENT;
+        game.board[position] = game.isOwnerTurn ? SQUARE_OWNER : SQUARE_OPPONENT;
         game.isOwnerTurn = !game.isOwnerTurn;
-
-        game.gameState = checkWinner(game.board);
+        game.gameState = _checkWinner(game.board, playerSquare);
     }
 
-    function getGame(uint256 gameId) public view returns (Game memory) {
+    function getGame(uint256 gameId) external view returns (Game memory) {
+        require(gameId < games.length, "This game does not exist");
         return games[gameId];
+    }
+
+    function getGames() external view returns (Game[] memory) {
+        return games;
+    }
+
+    fallback() external {
     }
 }

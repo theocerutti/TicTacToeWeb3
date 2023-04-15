@@ -2,14 +2,15 @@ import { ethers } from "hardhat";
 
 async function main() {
   const TicTacToeFactory = await ethers.getContractFactory("TicTacToe");
-  const contract = await TicTacToeFactory.deploy();
-
-  await contract.deployed();
-
-  console.log(`Contract deployed to ${contract.address}`);
+  console.log("Deploying contract...");
+  const ticTacToe = await TicTacToeFactory.deploy();
+  await ticTacToe.deployed();
+  console.log(`Deployed contract to: ${ticTacToe.address}`);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  })
+  .then(() => process.exit(0));
