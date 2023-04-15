@@ -22,6 +22,7 @@ contract TicTacToe {
         uint8[9] board;
         bool isOwnerTurn;
         GameState gameState;
+        uint256 id;
     }
 
     event NewGame(address owner);
@@ -32,7 +33,8 @@ contract TicTacToe {
         for (uint8 i = 0; i < board.length; i++) {
             board[i] = SQUARE_NONE;
         }
-        Game memory game = Game(msg.sender, address(0), address(0), board, true, GameState.OnGoing);
+        uint256 id = games.length;
+        Game memory game = Game(msg.sender, address(0), address(0), board, true, GameState.OnGoing, id);
         games.push(game);
 
         emit NewGame(msg.sender);
@@ -90,6 +92,10 @@ contract TicTacToe {
     function getGame(uint256 gameId) external view returns (Game memory) {
         require(gameId < games.length, "This game does not exist");
         return games[gameId];
+    }
+
+    function getGamesCount() external view returns (uint256) {
+        return games.length;
     }
 
     function getGames() external view returns (Game[] memory) {

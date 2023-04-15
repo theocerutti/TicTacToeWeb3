@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
 import { Button, useToast } from "@chakra-ui/react";
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
+import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 import { contractConfig } from "../config/contractConfig";
 
 const JoinButton = () => {
+  const { isDisconnected } = useAccount();
   const toast = useToast();
   const [gameId, setGameId] = useState<BigNumber>(BigNumber.from(0));
   // @ts-ignore
@@ -34,7 +35,7 @@ const JoinButton = () => {
 
   return (
     <>
-      <Button disabled={!write || isLoading} isLoading={isLoading} loadingText="Joining" onClick={() => join()}>
+      <Button disabled={isDisconnected || !write || isLoading} isLoading={isLoading} loadingText="Joining" onClick={() => join()}>
         Join
       </Button>
       <div>{

@@ -4,7 +4,7 @@ import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { arbitrum, goerli, hardhat, mainnet, optimism, polygon } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import AppBar from "./AppBar";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Box } from "@chakra-ui/react";
 import FlexContainer from "../components/FlexContainer";
 import { Outlet } from "react-router-dom";
 
@@ -35,7 +35,6 @@ const wagmiClient = createClient({
 });
 
 const AppLayout = () => {
-  // TODO: check if env is filled correctly and show error if not
   // @ts-ignore
   return (
     <FlexContainer>
@@ -43,7 +42,9 @@ const AppLayout = () => {
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider modalSize={"compact"} chains={chains}>
             <AppBar />
-            <Outlet />
+            <Box m={4}>
+              <Outlet />
+            </Box>
           </RainbowKitProvider>
         </WagmiConfig>
       </ChakraProvider>

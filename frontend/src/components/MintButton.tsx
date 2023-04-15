@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { Button } from "@chakra-ui/react";
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
+import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 import { contractConfig } from "../config/contractConfig";
 import { useToast } from '@chakra-ui/react'
 
 const MintButton = () => {
   const toast = useToast()
+  const { isDisconnected } = useAccount();
+
   // @ts-ignore
   const { config, error, refetch } = usePrepareContractWrite({
     ...contractConfig,
@@ -13,7 +15,7 @@ const MintButton = () => {
     enabled: false
   });
   // @ts-ignore
-  const { data, write } = useContractWrite(config);
+  const { data, write: mint } = useContractWrite(config);
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash
@@ -22,17 +24,20 @@ const MintButton = () => {
   const mintGame = async () => {
     console.log("Try to mint new game...")
     await refetch();
-    write?.();
+    // @ts-ignore
+    mint?.();
   };
 
   useEffect(() => {
     if (isSuccess)
       toast({status: 'success', title: 'Game created successfully!'});
-  }, [isSuccess]);
+  }, [isSuccess, toast]);
+
+  console.log(isDisconnected);
 
   return (
     <>
-      <Button colorScheme='blue' disabled={!write || isLoading} isLoading={isLoading} loadingText='Creating' onClick={mintGame}>
+      <Button colorScheme='blue' disabled={isDisconnected || !mint || isLoading} isLoading={isLoading} loadingText='Creating' onClick={mintGame}>
         Create
       </Button>
       <div>{

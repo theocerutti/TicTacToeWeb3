@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers";
+
 export enum GameState {
   Draw,
   HasWinner,
@@ -11,4 +13,5 @@ export type Game = {
   board: number[];
   isOwnerTurn: boolean;
   gameState: GameState;
+  id: BigNumber;
 }
