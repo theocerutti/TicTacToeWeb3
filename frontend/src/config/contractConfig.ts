@@ -1,8 +1,6 @@
-import { UseContractConfig } from "wagmi";
-import config from "../contractConfig.json";
+import config from '../contractConfig.json';
 
-// @ts-ignore
-export const contractConfig: UseContractConfig = {
-  address: config.address,
-  abi: config.abi as any,
-}
+export const contractConfig: { address: `0x${string}`; abi: any } = {
+  address: config.address as `0x${string}`,
+  abi: config.abi as any
+};

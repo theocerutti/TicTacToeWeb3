@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumber } from 'ethers';
 
 export enum GameState {
   Draw,
@@ -14,4 +14,4 @@ export type Game = {
   isOwnerTurn: boolean;
   gameState: GameState;
   id: BigNumber;
-}
+};

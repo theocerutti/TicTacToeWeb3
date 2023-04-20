@@ -1,5 +1,14 @@
-import React, { useState } from "react";
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import React, { useState } from 'react';
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay
+} from '@chakra-ui/react';
 
 // TODO: implement it when trying to access a protected route
 const NotConnectedErrorModal = ({ handleClose }: { handleClose: () => void }) => {
@@ -8,7 +17,7 @@ const NotConnectedErrorModal = ({ handleClose }: { handleClose: () => void }) =>
   const onClose = () => {
     setIsOpen(false);
     handleClose();
-  }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -18,7 +27,7 @@ const NotConnectedErrorModal = ({ handleClose }: { handleClose: () => void }) =>
         <ModalCloseButton />
 
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={onClose}>
+          <Button colorScheme="blue" mr={3} onClick={onClose}>
             Close
           </Button>
         </ModalFooter>

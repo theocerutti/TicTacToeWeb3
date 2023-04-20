@@ -1,14 +1,16 @@
-html, body {
-    height: 100%;
+html,
+body {
+  height: 100%;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
-div[data-rk], #root {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+div[data-rk],
+#root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }

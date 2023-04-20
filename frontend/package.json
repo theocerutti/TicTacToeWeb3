@@ -21,6 +21,18 @@
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
+    "@types/eslint": "^8.4.10",
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
+    "eslint": "8.38.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-mdx": "^2.0.4",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-testing-library": "^5.9.1",
     "wagmi": "0.12.8",
     "web-vitals": "^2.1.4"
   },
@@ -28,7 +40,10 @@
     "start": "GENERATE_SOURCEMAP=false react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc.json"
   },
   "eslintConfig": {
     "extends": [
@@ -47,5 +62,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "prettier": "2.8.7"
   }
 }
