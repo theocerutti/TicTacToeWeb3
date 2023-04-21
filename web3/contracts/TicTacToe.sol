@@ -87,6 +87,8 @@ contract TicTacToe {
         game.board[position] = game.isOwnerTurn ? SQUARE_OWNER : SQUARE_OPPONENT;
         game.isOwnerTurn = !game.isOwnerTurn;
         game.gameState = _checkWinner(game.board, playerSquare);
+        if (game.gameState == GameState.HasWinner)
+            game.winner = msg.sender;
     }
 
     function getGame(uint256 gameId) external view returns (Game memory) {

@@ -39,7 +39,7 @@ const AppLayout = () => {
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider modalSize={'compact'} chains={chains}>
             <AppBar />
-            <Box m={4}>
+            <Box display="flex" flexDirection="column" flex={1} m={4}>
               <Outlet />
             </Box>
           </RainbowKitProvider>

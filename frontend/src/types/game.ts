@@ -6,11 +6,17 @@ export enum GameState {
   OnGoing
 }
 
+export enum SquareType {
+  SQUARE_NONE = 0,
+  SQUARE_OWNER = 1,
+  SQUARE_OPPONENT = 2
+}
+
 export type Game = {
   owner: string;
   opponent: string;
   winner: string;
-  board: number[];
+  board: SquareType[];
   isOwnerTurn: boolean;
   gameState: GameState;
   id: BigNumber;

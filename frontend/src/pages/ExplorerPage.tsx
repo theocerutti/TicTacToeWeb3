@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Alert,
   AlertDescription,
   AlertIcon,
   AlertTitle,
   Box,
+  Button,
   Center,
+  HStack,
   SimpleGrid,
   Spinner,
   Text,
@@ -15,35 +17,36 @@ import { useContractRead } from 'wagmi';
 import { contractConfig } from '../config/contractConfig';
 import type { Game } from '../types';
 import GamePreview from '../components/GamePreview';
+import { GiClockwiseRotation } from 'react-icons/gi';
 
 const ExplorerPage = () => {
   const toast = useToast();
-  const { data, isError, isLoading, error } = useContractRead({
+  const { data, isLoading, refetch } = useContractRead({
     ...contractConfig,
-    functionName: 'getGames'
-  });
-  const games = data as Game[];
-
-  useEffect(() => {
-    if (isError) {
+    functionName: 'getGames',
+    onError: (error) => {
       toast({ status: 'error', title: 'Error while fetching games.' });
       console.error(error);
     }
-  }, [isError, toast]);
+  });
+  const games = data as Game[];
 
   return (
-    <>
-      <Text ml={20} fontWeight="bold" fontSize="4xl">
-        Game Explorer
-      </Text>
-      <Box mx={20}>
+    <Box mx={20}>
+      <HStack justifyContent='space-between'>
+        <Text mb={10} fontWeight='bold' fontSize='4xl'>
+          Game Explorer
+        </Text>
+        <Button leftIcon={<GiClockwiseRotation />} onClick={async () => await refetch()}>Reload</Button>
+      </HStack>
+      <Box>
         {isLoading && (
           <Center>
             <Spinner />
           </Center>
         )}
         {games && games.length === 0 && (
-          <Alert status="warning">
+          <Alert status='warning'>
             <AlertIcon />
             <AlertTitle>No games!</AlertTitle>
             <AlertDescription>
@@ -59,7 +62,7 @@ const ExplorerPage = () => {
           </SimpleGrid>
         )}
       </Box>
-    </>
+    </Box>
   );
 };
 

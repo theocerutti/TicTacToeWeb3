@@ -7,17 +7,10 @@ import ProtectedRoute from './ProtectedRoute';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<AppLayout />}>
-      <Route path="/" element={<HomePage />} />
-      <Route path="explore" element={<ExplorerPage />} />
-      <Route
-        path="game/:userId"
-        element={
-          <ProtectedRoute>
-            <GamePage />
-          </ProtectedRoute>
-        }
-      />
+    <Route path='/' element={<AppLayout />}>
+      <Route path='/' element={<HomePage />} />
+      <Route path='explore' element={<ExplorerPage />} />
+      <Route path='game/:gameId' element={<ProtectedRoute><GamePage /></ProtectedRoute>} />
     </Route>
   )
 );
