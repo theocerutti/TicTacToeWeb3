@@ -7,7 +7,7 @@ const MintButton = () => {
   const { isDisconnected } = useAccount();
   const { write: mint, refetch, isLoading } = useCustomContractWrite({
     functionName: 'mintGame',
-    enabled: false,
+    preparedSuccessMsg: null,
     waitTransactionSuccessMsg: 'Minted new game successfully!',
     waitTransactionErrorMsg: 'Error while minting new game.'
   });

@@ -8,12 +8,12 @@ type UseCustomContractWriteProps = {
   enabled?: boolean;
   args?: unknown[],
   scopeKey?: string;
-  preparedErrorMsg?: string;
-  preparedSuccessMsg?: string;
-  callContractSuccessMsg?: string,
-  callContractErrorMsg?: string,
-  waitTransactionSuccessMsg?: string;
-  waitTransactionErrorMsg?: string;
+  preparedSuccessMsg?: string | null;
+  preparedErrorMsg?: string | null;
+  callContractSuccessMsg?: string | null,
+  callContractErrorMsg?: string | null,
+  waitTransactionSuccessMsg?: string | null;
+  waitTransactionErrorMsg?: string | null;
   onSuccessPrepared?: (defaultBehavior: () => void) => void;
   onErrorPrepared?: (error: Error, defaultBehavior: (error: Error) => void) => void;
   onSuccessCallContract?: (defaultBehavior: () => void) => void;
@@ -24,7 +24,7 @@ type UseCustomContractWriteProps = {
 
 const useCustomContractWrite = ({
                                   functionName,
-                                  enabled = false,
+                                  enabled = true,
                                   args = [],
                                   scopeKey,
                                   preparedErrorMsg = 'Transaction didn\'t prepared successfully.',
@@ -45,10 +45,12 @@ const useCustomContractWrite = ({
 
   const defaultBehaviors = {
     onSuccessPrepared: () => {
-      toast({ status: 'success', title: preparedSuccessMsg });
+      if (preparedSuccessMsg)
+        toast({ status: 'success', title: preparedSuccessMsg });
     },
     onErrorPrepared: (error: Error) => {
-      toast({ status: 'error', title: preparedErrorMsg });
+      if (preparedErrorMsg)
+        toast({ status: 'error', title: preparedErrorMsg });
       console.error(error);
     },
     onSuccessCallContract: () => {
@@ -60,15 +62,18 @@ const useCustomContractWrite = ({
       });
     },
     onErrorCallContract: (error: Error) => {
-      toast({ status: 'error', title: callContractErrorMsg });
+      if (callContractErrorMsg)
+        toast({ status: 'error', title: callContractErrorMsg });
       console.error(error);
     },
     onSuccessWaitTransaction: () => {
-      toast({ status: 'success', title: waitTransactionSuccessMsg });
+      if (waitTransactionSuccessMsg)
+        toast({ status: 'success', title: waitTransactionSuccessMsg });
       closeLoadingToast();
     },
     onErrorWaitTransaction: (error: Error) => {
-      toast({ status: 'error', title: waitTransactionErrorMsg });
+      if (waitTransactionErrorMsg)
+        toast({ status: 'error', title: waitTransactionErrorMsg });
       closeLoadingToast();
       console.error(error);
     }

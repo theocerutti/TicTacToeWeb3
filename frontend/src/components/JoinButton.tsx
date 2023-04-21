@@ -36,7 +36,7 @@ const JoinButton = ({ gameId, alreadyInGame, ...props }: {
     <Button
       variant='solid'
       colorScheme='blue'
-      isDisabled={isDisconnected || !write || isLoading}
+      isDisabled={isDisconnected || props.isDisabled}
       isLoading={isLoading}
       loadingText='Joining...'
       onClick={() => join()}

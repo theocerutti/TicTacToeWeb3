@@ -1,7 +1,7 @@
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { arbitrum, goerli, hardhat, mainnet, optimism, polygon } from 'wagmi/chains';
+import { goerli, hardhat } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import AppBar from './AppBar';
 import { Box, ChakraProvider } from '@chakra-ui/react';
@@ -10,11 +10,8 @@ import { Outlet } from 'react-router-dom';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    ...(process.env.REACT_APP_ENV === 'development' ? [goerli, hardhat] : [])
+    goerli,
+    ...(process.env.REACT_APP_ENV === 'development' ? [hardhat] : [])
   ],
   [publicProvider()]
 );
@@ -35,11 +32,11 @@ const wagmiClient = createClient({
 const AppLayout = () => {
   return (
     <FlexContainer>
-      <ChakraProvider toastOptions={{defaultOptions: { position: "bottom-right" }}}>
+      <ChakraProvider toastOptions={{ defaultOptions: { position: 'bottom-right' } }}>
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider modalSize={'compact'} chains={chains}>
             <AppBar />
-            <Box display="flex" flexDirection="column" flex={1} m={4}>
+            <Box display='flex' flexDirection='column' flex={1} m={4}>
               <Outlet />
             </Box>
           </RainbowKitProvider>

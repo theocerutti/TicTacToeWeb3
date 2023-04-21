@@ -36,7 +36,7 @@ const GamePage = () => {
       return (
         <Alert>
           <AlertIcon />
-          <AlertTitle>Game is not yours!</AlertTitle>
+          <AlertTitle>You are not part of this game!</AlertTitle>
         </Alert>
       );
     }

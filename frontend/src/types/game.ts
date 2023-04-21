@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers';
 
 export enum GameState {
+  WaitOpponent,
   Draw,
   HasWinner,
   OnGoing

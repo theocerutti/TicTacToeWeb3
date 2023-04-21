@@ -3,6 +3,7 @@ import { Box, Center, SimpleGrid, Spinner, Tag, Text, VStack } from '@chakra-ui/
 import { Game, SquareType } from '../types';
 import { useAccount } from 'wagmi';
 import useCustomWrite from '../hooks/useCustomWrite';
+import { ethers } from 'ethers';
 
 const TicTacToe = ({ game, refetchGame }: { game: Game, refetchGame: any } & React.ComponentPropsWithoutRef<'div'>) => {
   const [position, setPosition] = useState<number>(0);
@@ -34,13 +35,26 @@ const TicTacToe = ({ game, refetchGame }: { game: Game, refetchGame: any } & Rea
     }
   };
 
+  const turnText = () => {
+    if (game.opponent === ethers.constants.AddressZero) {
+      return (
+        <VStack>
+          <Text fontSize='xl'>You can't play if you don't have opponent!</Text>
+          <Text fontSize='xl'>Wait for a player to join...</Text>
+        </VStack>
+      );
+    } else {
+      return <Text fontSize='xl'>Its {game.isOwnerTurn && game.owner !== myAddress && 'NOT'} your turn</Text>;
+    }
+  };
+
   if (isLoading)
     return <Center><Spinner /></Center>;
 
   return (
     <>
       <Center mb={5}>
-        <Text fontSize='xl'>Its {game.isOwnerTurn && game.owner !== myAddress && 'NOT'} your turn</Text>
+        {turnText()}
       </Center>
       <SimpleGrid columns={Math.sqrt(game.board.length)} spacingX='40px' spacingY='20px'>
         {Array.from(Array(game.board.length).keys()).map((i) => (

@@ -10,6 +10,7 @@ contract TicTacToe {
     uint8 constant SQUARE_OPPONENT = 2;
 
     enum GameState {
+        WaitOpponent,
         Draw,
         HasWinner,
         OnGoing
@@ -34,7 +35,7 @@ contract TicTacToe {
             board[i] = SQUARE_NONE;
         }
         uint256 id = games.length;
-        Game memory game = Game(msg.sender, address(0), address(0), board, true, GameState.OnGoing, id);
+        Game memory game = Game(msg.sender, address(0), address(0), board, false, GameState.WaitOpponent, id);
         games.push(game);
 
         emit NewGame(msg.sender);
@@ -44,10 +45,11 @@ contract TicTacToe {
         require(gameId < games.length, "This game does not exist");
         require(games[gameId].owner != msg.sender, "You cannot join your own game");
         require(games[gameId].opponent == address(0), "This game is already full");
-        require(games[gameId].gameState == GameState.OnGoing, "This game is already finished");
+        require(games[gameId].gameState == GameState.WaitOpponent, "This game is already finished");
 
         Game storage game = games[gameId];
         game.opponent = msg.sender;
+        game.gameState = GameState.OnGoing;
 
         emit JoinGame(gameId, msg.sender);
     }

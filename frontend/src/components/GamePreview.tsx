@@ -7,7 +7,8 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader, Flex,
+  CardHeader,
+  Flex,
   Heading,
   HStack,
   Stack,
@@ -20,6 +21,7 @@ import { truncateEthAddress } from '../utils/address';
 import JoinButton from './JoinButton';
 import { AiFillForward, AiFillTrophy, AiOutlineSwap } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';
+import { CgSearchLoading } from 'react-icons/cg';
 
 const GamePreview = ({ game }: { game: Game }) => {
   const { address: myAddress } = useAccount();
@@ -32,10 +34,12 @@ const GamePreview = ({ game }: { game: Game }) => {
 
   const headerColor = () => {
     switch (game.gameState) {
+      case GameState.WaitOpponent:
+        return 'yellow.500';
       case GameState.OnGoing:
         return 'green.500';
       case GameState.Draw:
-        return 'yellow.500';
+        return 'red.500';
       case GameState.HasWinner:
         return 'blue.500';
     }
@@ -43,6 +47,8 @@ const GamePreview = ({ game }: { game: Game }) => {
 
   const getGameStateIcon = () => {
     switch (game.gameState) {
+      case GameState.WaitOpponent:
+        return <CgSearchLoading/>;
       case GameState.OnGoing:
         return <AiFillForward />;
       case GameState.Draw:
@@ -60,7 +66,7 @@ const GamePreview = ({ game }: { game: Game }) => {
             <Flex>
               {game.owner === myAddress && (
                 <Box mr={2}>
-                  <FaUserAlt/>
+                  <FaUserAlt />
                 </Box>
               )}
               <Box>
@@ -96,16 +102,15 @@ const GamePreview = ({ game }: { game: Game }) => {
           }
         </Stack>
       </CardBody>
-      {game.gameState === GameState.OnGoing && (
-        <CardFooter>
-          <ButtonGroup spacing='2'>
-            <JoinButton
-              alreadyInGame={game.owner === myAddress || game.opponent === myAddress}
-              isDisabled={game.owner === myAddress} gameId={game.id}
-            />
-          </ButtonGroup>
-        </CardFooter>
-      )}
+      <CardFooter>
+        <ButtonGroup spacing='2'>
+          <JoinButton
+            isDisabled={![GameState.OnGoing, GameState.WaitOpponent].includes(game.gameState)}
+            alreadyInGame={game.owner === myAddress || game.opponent === myAddress}
+            gameId={game.id}
+          />
+        </ButtonGroup>
+      </CardFooter>
     </Card>
   );
 };
