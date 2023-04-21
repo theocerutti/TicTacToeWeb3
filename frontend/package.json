@@ -2,7 +2,8 @@
   "name": "tictactoeweb3",
   "version": "0.1.0",
   "private": false,
-  "homepage": "http://theocerutti.github.io/tictactoeweb3",
+  "homepage": "https://theocerutti.github.io/TicTacToeWeb3",
+  "author": "Théo Cerutti",
   "dependencies": {
     "@chakra-ui/react": "^2.5.5",
     "@emotion/react": "^11.10.6",
