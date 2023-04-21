@@ -1,6 +1,6 @@
 import React from 'react';
 import { ethers } from 'ethers';
-import { Button, ButtonProps, useToast } from '@chakra-ui/react';
+import { Button, ButtonProps } from '@chakra-ui/react';
 import { useAccount } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
 import useCustomContractWrite from '../hooks/useCustomWrite';

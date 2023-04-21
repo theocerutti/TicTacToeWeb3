@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 import { contractConfig } from '../config/contractConfig';
-import { ToastId, useToast } from '@chakra-ui/react';
-import { Spinner } from '@chakra-ui/react';
+import { Spinner, ToastId, useToast } from '@chakra-ui/react';
 
 type UseCustomContractWriteProps = {
   functionName: string;
@@ -24,25 +23,25 @@ type UseCustomContractWriteProps = {
 };
 
 const useCustomContractWrite = ({
-  functionName,
-  enabled = false,
-  args = [],
-  scopeKey,
-  preparedErrorMsg = "Transaction didn't prepared successfully.",
-  preparedSuccessMsg = "Transaction prepared successfully.",
-  callContractSuccessMsg = "Transaction called successfully.",
-  callContractErrorMsg = "Error while calling transaction.",
-  waitTransactionSuccessMsg = 'Transaction mined successfully!',
-  waitTransactionErrorMsg = 'Error while waiting for transaction.',
-  onSuccessPrepared,
-  onErrorPrepared,
-  onSuccessCallContract,
-  onErrorCallContract,
-  onSuccessWaitTransaction,
-  onErrorWaitTransaction,
-}: UseCustomContractWriteProps) => {
+                                  functionName,
+                                  enabled = false,
+                                  args = [],
+                                  scopeKey,
+                                  preparedErrorMsg = 'Transaction didn\'t prepared successfully.',
+                                  preparedSuccessMsg = 'Transaction prepared successfully.',
+                                  callContractSuccessMsg = 'Transaction called successfully.',
+                                  callContractErrorMsg = 'Error while calling transaction.',
+                                  waitTransactionSuccessMsg = 'Transaction mined successfully!',
+                                  waitTransactionErrorMsg = 'Error while waiting for transaction.',
+                                  onSuccessPrepared,
+                                  onErrorPrepared,
+                                  onSuccessCallContract,
+                                  onErrorCallContract,
+                                  onSuccessWaitTransaction,
+                                  onErrorWaitTransaction
+                                }: UseCustomContractWriteProps) => {
   const toast = useToast();
-  const toastIdRef = React.useRef<ToastId>();
+  const toastIdRef = useRef<ToastId>();
 
   const defaultBehaviors = {
     onSuccessPrepared: () => {
@@ -57,7 +56,7 @@ const useCustomContractWrite = ({
         status: 'success',
         title: callContractSuccessMsg,
         duration: null,
-        icon: <Spinner/>,
+        icon: <Spinner />
       });
     },
     onErrorCallContract: (error: Error) => {
@@ -72,14 +71,14 @@ const useCustomContractWrite = ({
       toast({ status: 'error', title: waitTransactionErrorMsg });
       closeLoadingToast();
       console.error(error);
-    },
-  }
+    }
+  };
 
   const closeLoadingToast = () => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
-  }
+  };
 
   const prepared = usePrepareContractWrite({
     ...contractConfig,
@@ -98,9 +97,9 @@ const useCustomContractWrite = ({
       if (onErrorPrepared) {
         onErrorPrepared(error, defaultBehaviors.onErrorPrepared);
       } else {
-        defaultBehaviors.onErrorPrepared(error)
+        defaultBehaviors.onErrorPrepared(error);
       }
-    },
+    }
   });
 
   const contractWrite = useContractWrite({
@@ -136,7 +135,7 @@ const useCustomContractWrite = ({
       } else {
         defaultBehaviors.onErrorWaitTransaction(error);
       }
-    },
+    }
   });
 
   return {
@@ -145,8 +144,8 @@ const useCustomContractWrite = ({
     waitForTransaction,
     ...waitForTransaction,
     refetch: prepared.refetch,
-    write: contractWrite.write,
+    write: contractWrite.write
   };
-}
+};
 
 export default useCustomContractWrite;
