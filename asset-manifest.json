@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/TicTacToeWeb3/static/css/main.188e2222.css",
-    "main.js": "/TicTacToeWeb3/static/js/main.300596b6.js",
+    "main.js": "/TicTacToeWeb3/static/js/main.abeb7cdd.js",
     "static/js/963.69b62e17.chunk.js": "/TicTacToeWeb3/static/js/963.69b62e17.chunk.js",
     "static/js/448.680e5748.chunk.js": "/TicTacToeWeb3/static/js/448.680e5748.chunk.js",
     "static/js/845.69b764af.chunk.js": "/TicTacToeWeb3/static/js/845.69b764af.chunk.js",
@@ -37,6 +37,6 @@
   },
   "entrypoints": [
     "static/css/main.188e2222.css",
-    "static/js/main.300596b6.js"
+    "static/js/main.abeb7cdd.js"
   ]
 }
