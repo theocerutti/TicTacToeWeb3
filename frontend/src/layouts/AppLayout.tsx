@@ -35,7 +35,7 @@ const wagmiClient = createClient({
 const AppLayout = () => {
   return (
     <FlexContainer>
-      <ChakraProvider>
+      <ChakraProvider toastOptions={{defaultOptions: { position: "bottom-right" }}}>
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider modalSize={'compact'} chains={chains}>
             <AppBar />

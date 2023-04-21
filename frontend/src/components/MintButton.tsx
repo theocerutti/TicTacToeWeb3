@@ -1,36 +1,15 @@
 import React from 'react';
-import { Button, useToast } from '@chakra-ui/react';
-import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
-import { contractConfig } from '../config/contractConfig';
+import { Button } from '@chakra-ui/react';
+import { useAccount } from 'wagmi';
+import useCustomContractWrite from '../hooks/useCustomWrite';
 
 const MintButton = () => {
-  const toast = useToast();
   const { isDisconnected } = useAccount();
-
-  const { config, refetch } = usePrepareContractWrite({
-    ...contractConfig,
+  const { write: mint, refetch, isLoading } = useCustomContractWrite({
     functionName: 'mintGame',
-    onSuccess: () => {
-      // TODO: show spinner until transaction is mined
-    },
-    onError: (error) => {
-      toast({ status: 'error', title: 'Error while creating game.' });
-      console.error(error);
-    },
-    enabled: false
-  });
-
-  const { data, write: mint } = useContractWrite(config);
-
-  const { isLoading } = useWaitForTransaction({
-    hash: data?.hash,
-    onSuccess: () => {
-      toast({ status: 'success', title: 'Game created successfully!' });
-    },
-    onError: (error) => {
-      toast({ status: 'error', title: 'Error while creating game.' });
-      console.error(error);
-    },
+    enabled: false,
+    waitTransactionSuccessMsg: 'Minted new game successfully!',
+    waitTransactionErrorMsg: 'Error while minting new game.'
   });
 
   const mintGame = async () => {

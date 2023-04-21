@@ -1,9 +1,9 @@
 import React from 'react';
 import { ethers } from 'ethers';
 import { Button, ButtonProps, useToast } from '@chakra-ui/react';
-import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
-import { contractConfig } from '../config/contractConfig';
+import { useAccount } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
+import useCustomContractWrite from '../hooks/useCustomWrite';
 
 const JoinButton = ({ gameId, alreadyInGame, ...props }: {
   alreadyInGame?: boolean,
@@ -11,32 +11,12 @@ const JoinButton = ({ gameId, alreadyInGame, ...props }: {
 } & ButtonProps) => {
   const { isDisconnected } = useAccount();
   const navigate = useNavigate();
-  const toast = useToast();
-
-  const { config, refetch } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: 'join',
+  const { write, refetch, isLoading } = useCustomContractWrite({
     args: [gameId.toString()],
-    onSuccess: () => {
-      // TODO: show spinner until transaction is mined
-    },
-    onError: (error) => {
-      toast({ status: 'error', title: 'Error while joining game.' });
-      console.error(error);
-    },
-    enabled: false
-  });
-
-  const { data, write } = useContractWrite(config);
-
-  const { isLoading } = useWaitForTransaction({
-    hash: data?.hash,
-    onError: (error) => {
-      toast({ status: 'error', title: 'Error while joining game.' });
-      console.error(error);
-    },
-    onSuccess: () => {
-      toast({ status: 'success', title: 'Joined game successfully!' });
+    functionName: 'join',
+    enabled: false,
+    onSuccessWaitTransaction: (defaultBehavior) => {
+      defaultBehavior();
       goToGame();
     }
   });

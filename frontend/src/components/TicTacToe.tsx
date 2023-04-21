@@ -1,38 +1,18 @@
 import React, { useState } from 'react';
-import { Box, Center, SimpleGrid, Spinner, Tag, Text, useToast, VStack } from '@chakra-ui/react';
+import { Box, Center, SimpleGrid, Spinner, Tag, Text, VStack } from '@chakra-ui/react';
 import { Game, SquareType } from '../types';
-import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
-import { contractConfig } from '../config/contractConfig';
+import { useAccount } from 'wagmi';
+import useCustomWrite from '../hooks/useCustomWrite';
 
 const TicTacToe = ({ game, refetchGame }: { game: Game, refetchGame: any } & React.ComponentPropsWithoutRef<'div'>) => {
   const [position, setPosition] = useState<number>(0);
   const { address: myAddress } = useAccount();
-  const toast = useToast();
-  const { config, refetch } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: 'play',
+  const { refetch, isLoading, write: playCall } = useCustomWrite({
     args: [game.id.toString(), position],
-    onSuccess: () => {
-      // TODO: show spinner until transaction is mined
-    },
-    onError: (error) => {
-      // @ts-ignore
-      toast({ status: 'error', title: `Error while playing game: ${error?.reason}` });
-      console.error(error);
-    },
-    enabled: false
-  });
-
-  const { data, write: playCall } = useContractWrite(config);
-
-  const { isLoading } = useWaitForTransaction({
-    hash: data?.hash,
-    onError: (error) => {
-      toast({ status: 'error', title: `Error while playing game: ${error.message}` });
-      console.error(error);
-    },
-    onSuccess: async () => {
-      toast({ status: 'success', title: 'Play game successfully!' });
+    functionName: 'play',
+    enabled: false,
+    onSuccessWaitTransaction: async (defaultBehavior) => {
+      defaultBehavior();
       await refetchGame();
     }
   });
